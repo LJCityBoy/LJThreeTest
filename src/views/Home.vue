@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import * as THREE from 'three'
 import "three/examples/js/controls/OrbitControls";
 export default {
   name: "Home",
@@ -28,13 +29,15 @@ export default {
       let self = this;
       self.container = self.$refs.container;
       //初始化相机
+      new THREE.OrthographicCamera()
       self.camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight,1.0,100000);
       self.camera.position.set(10, 10, 10);
       self.camera.lookAt(0, 0, 0);
+      
 
       //初始化scene
       self.scene = new THREE.Scene();
-      self.scene.background = new THREE.Color(0xff0000);
+      self.scene.background = new THREE.Color('0xffff00');
 
       //初始化
       self.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -72,6 +75,7 @@ export default {
       //环境光
        let ambientLight = new THREE.AmbientLight(0xffffff, 10); // soft white light
       this.scene.add(ambientLight);
+      let pointLight = new THREE.PointLight(new THREE.Color('0xff0000'))
     }
   },
   destroyed() {}

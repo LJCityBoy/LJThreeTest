@@ -78,7 +78,11 @@ module.exports = {
         https: false,
 
         hotOnly: false,
-        // proxy:'/'
+        // proxy:'/',
+        overlay: {
+            warnings: false,
+            errors: false
+        },
 
     }
 }
