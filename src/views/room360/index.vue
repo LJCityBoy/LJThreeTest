@@ -17,12 +17,15 @@
 import { ref, onMounted } from "vue";
 import * as THREE from "three";
 import { Room } from "./room";
+import gsap from "gsap";
 
 //加载进度
 const progress = ref(0);
 
 //当前位置tag
 let tagDiv = ref(null);
+
+const isMouseDown = ref(false);
 
 const scene = new THREE.Scene();
 
@@ -75,6 +78,43 @@ onMounted(() => {
   createLiveRoom(scene);
   createKitchen(scene);
   createBalcony(scene);
+
+  //鼠标按下
+  container.value.addEventListener(
+    "mousedown",
+    () => {
+      isMouseDown.value = true;
+    },
+    false
+  );
+  //鼠标键上抬起
+  container.value.addEventListener(
+    "mouseup",
+    () => {
+      isMouseDown.value = false;
+    },
+    false
+  );
+  //鼠标移出
+  container.value.addEventListener("mouseout", () => {
+    isMouseDown.value = false;
+  });
+
+  let clock = new THREE.Clock();
+  clock.start();
+
+  container.value.addEventListener("mousemove", (event) => {
+    camera.rotation.order = "YXZ";
+    let delta = clock.getDelta();
+    if (isMouseDown.value) {
+      gsap.to(camera.rotation, {
+        duration: delta,
+        x: camera.rotation.x + event.movementY * 0.0012,
+        y: camera.rotation.y + event.movementX * 0.0012,
+      });
+      camera.rotation.order = "YXZ";
+    }
+  });
 });
 
 THREE.DefaultLoadingManager.onProgress = function (__item, loaded, total) {
